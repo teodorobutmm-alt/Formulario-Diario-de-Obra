@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Diário de Obra</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --cor-principal:#c40000;
+      --cor-principal-escura:#8f0000;
+      --cinza-linha:#d9d9d9;
+      --cinza-box:#f3f3f3;
+      --texto:#2f2f2f;
+      --linha-secao:#e3e3e3;
+      --cinza-card:#f1f1f1;
+      --vermelho-linha: rgba(196, 0, 0, 0.25);
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      color: var(--texto);
+      font-size: 12px;
+    }
+
+    *, *:before, *:after {
+      box-sizing: inherit;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    /* CABEÇALHO */
+    .header-container{
+      display:flex;
+      align-items:center;
+      justify-content: center;
+      gap: 55px;
+      margin-bottom: 10px;
+      flex-wrap: nowrap;
+    }
+    .header-container img{
+      height: 44px;
+      width:auto;
+      object-fit: contain;
+      display:block;
+    }
+
+    /* TOPO */
+    .topo-bloco{
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 0 1px #e3e3e3;
+      padding: 14px;
+      margin: 0 0 14px 0;
+    }
+
+    .topo-titulo-box{
+      border: 1px solid #e3e3e3;
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: center;
+      margin-bottom: 12px;
+      background: var(--cor-principal);
+    }
+
+    .topo-titulo-box .titulo-principal{
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .3px;
+      margin: 0;
+      color: #fff;
+    }
+
+    .topo-titulo-box .titulo-sub{
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: .2px;
+    }
+
+    .topo-titulo-box .titulo-sub .destaque{
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .topo-campos-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .campo-topo{
+      background: var(--cinza-card);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .campo-topo label{
+      display:block;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--cor-principal);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+
+    .campo-topo label.required::after{
+      content: ' *';
+      color: red;
+      font-weight: bold;
+      margin-left: 4px;
+    }
+
+    .campo-topo input{
+      width:100%;
+      height: 38px;
+      border: 1px solid #d5d5d5;
+      border-radius: 8px;
+      padding: 9px;
+      font-size: 12px;
+      background:#fff;
+      box-sizing: border-box;
+    }
+
+    label{
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+
+    label.required::after {
+      content: ' *';
+      color: red;
+      font-weight: bold;
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="url"],
+    input[type="number"]{
+      border: 1px solid var(--cinza-linha);
+      border-radius: 3px;
+      padding: 8px;
+      font-size: 12px;
+      width: 100%;
+      font-family: Arial, sans-serif;
+      background:#fff;
+      height: 38px;
+      box-sizing: border-box;
+    }
+
+    textarea{
+      border: 1px solid var(--cinza-linha);
+      border-radius: 3px;
+      padding: 8px;
+      font-size: 12px;
+      width: 100%;
+      font-family: Arial, sans-serif;
+      background:#fff;
+      box-sizing: border-box;
+    }
+
+    #descricao,
+    #comentarios {
+      height: 100px;
+      resize: none;
+    }
+
+    .char-count {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+      text-align: right;
+      display: block;
+    }
+
+    #obra, #inicio, #termino{
+      background: var(--cinza-box);
+    }
+
+    .separador{
+      border-top: 1px solid var(--vermelho-linha);
+      margin: 14px 0;
+    }
+
+    /* BLOCO CLIMA / OBRA */
+    .quadrado-blocos{
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    .linha-dupla-checks{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .bloco-checks{
+      border: 1px solid var(--cinza-linha);
+      border-radius: 6px;
+      padding: 12px;
+      background: #fff;
+      min-height: 140px;
+    }
+
+    .bloco-checks .titulo-bloco{
+      display:block;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    #grupoClima{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 12px;
+    }
+
+    #grupoClima label{
+      display:flex;
+      align-items:center;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 12px;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    #grupoClima label img{
+      height: 20px;
+      width:auto;
+    }
+
+    #grupoObra{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #grupoObra label{
+      display:flex;
+      align-items:center;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 12px;
+      margin: 0;
+    }
+
+    /* =========================
+       Presentes / Ausentes / Terceirizados
+       ========================= */
+
+    .bloco-efetivo-card{
+      border: 1px solid #e3e3e3;
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+      overflow: visible;
+    }
+
+    .bloco-efetivo-titulo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      font-size: 14px;
+      margin: 0 0 10px 0;
+    }
+
+    .bloco-efetivo-titulo .emoji{ font-size: 18px; }
+
+    .tabela-efetivo{
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      overflow: hidden;
+      background:#fff;
+      table-layout: auto;
+    }
+
+    .tabela-efetivo thead th{
+      background:#f3f3f3;
+      color:#333;
+      font-size: 12px;
+      font-weight: 900;
+      text-align:left;
+      padding: 8px 10px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+
+    .tabela-efetivo tbody td{
+      padding: 8px 10px;
+      border-bottom: 1px solid #efefef;
+      vertical-align: top;
+    }
+
+    .tabela-efetivo tbody tr:last-child td{ border-bottom:none; }
+
+    .tabela-efetivo th:last-child,
+    .tabela-efetivo td:last-child{
+      width: 130px;
+      min-width: 130px;
+    }
+
+    .tabela-efetivo input[type="text"]{
+      width: 100%;
+      height: 34px;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      padding: 6px 8px;
+      background:#fff;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .tabela-efetivo input[type="number"]{
+      width: 80px;
+      min-width: 80px;
+      max-width: 100%;
+      height: 34px;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      padding: 6px 8px;
+      background:#fff;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .btn-remover-linha{
+      height: 29px;
+      min-width: 96px;
+      width: 100%;
+      padding: 0 8px;
+      border-radius: 8px;
+      border: 1px solid var(--cor-principal);
+      background: var(--cor-principal);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-remover-linha:hover{
+      background: var(--cor-principal-escura);
+      border-color: var(--cor-principal-escura);
+    }
+
+    .btn-adicionar-mais{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(196,0,0,.22);
+      background: rgba(196,0,0,.08);
+      color: var(--cor-principal);
+      font-weight: 900;
+      font-size: 13px;
+      cursor:pointer;
+    }
+    .btn-adicionar-mais:hover{ background: rgba(196,0,0,.12); }
+
+    /* IMAGENS */
+    .grid-imagens{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .dropbox{
+      width: 100%;
+      height: 120px;
+      border: 2px dashed #ccc;
+      border-radius: 6px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 12px;
+      color: #777;
+      background:#f9f9f9;
+      position: relative;
+      overflow:hidden;
+      cursor:pointer;
+    }
+
+    .dropbox img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dropbox input[type="file"] { display:none; }
+
+    .remove-btn{
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      width: auto;
+      height: auto;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1;
+      padding: 5px;
+      margin: 0;
+      cursor: pointer;
+      z-index: 2;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .dropbox:hover .remove-btn{
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .dropbox.show-remove .remove-btn{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* BOTÕES / RODAPÉ */
+    .button-container,
+    .botoes{
+      text-align:center;
+      margin-top: 16px;
+    }
+
+    button{
+      padding: 10px 20px;
+      background: var(--cor-principal);
+      border:none;
+      border-radius: 6px;
+      color:#fff;
+      font-size: 14px;
+      font-weight: 900;
+      cursor:pointer;
+    }
+    button:hover{ background: var(--cor-principal-escura); }
+
+    input:focus, textarea:focus, select:focus, button:focus{
+      outline:none;
+      box-shadow:none;
+    }
+
+    .rodape-versao{
+      margin-top: 10px;
+      text-align:center;
+      font-size: 12px;
+      color:#777;
+    }
+
+    /* REVISÃO / PDF */
+    .container-revisao {
+      margin: 0 auto;
+      padding: 20px 0;
+      background: #ffffff;
+    }
+
+    .revisao-a4 {
+      width: 794px;
+      margin: 0 auto;
+      padding: 20px 30px;
+      background: #ffffff;
+      box-sizing: border-box;
+      word-wrap: break-word;
+      display: block;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+
+    .desktop-only { display: block; }
+    .mobile-only  { display: none; }
+
+    .revisao-a4 .header-container{
+      justify-content: center;
+      gap: 55px;
+      margin: 0 auto 14px auto;
+    }
+
+    .revisao-a4 a {
+      text-decoration: underline;
+      word-break: break-word;
+      color: var(--cor-principal);
+    }
+
+    .rev-topo-bloco{
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 0 1px #e3e3e3;
+      padding: 14px;
+      margin: 0 0 14px 0;
+    }
+
+    .rev-topo-titulo-box{
+      border: 1px solid #e3e3e3;
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: center;
+      margin-bottom: 12px;
+      background: var(--cor-principal);
+    }
+
+    .rev-topo-titulo-box .titulo-principal{
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .3px;
+      margin: 0;
+      color: #fff;
+    }
+
+    .rev-topo-titulo-box .titulo-sub{
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: .2px;
+    }
+
+    .rev-topo-titulo-box .titulo-sub .destaque{
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .rev-topo-campos-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .rev-campo{
+      background: var(--cinza-card);
+      border-radius: 10px;
+      padding: 10px;
+      margin: 0;
+    }
+
+    .rev-campo .rev-label{
+      display:block;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--cor-principal);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+
+    .rev-campo .rev-valor{
+      border: 1px solid #d5d5d5;
+      border-radius: 8px;
+      padding: 9px;
+      background: #fff;
+      font-size: 12px;
+      min-height: 38px;
+      display:flex;
+      align-items:center;
+      color:#444;
+      box-sizing: border-box;
+      word-break: break-word;
+    }
+
+    .revClima{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 12px;
+    }
+
+    .revClima .item-clima{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .revObraCondicao{
+      display:block;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .revImagens{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .revImagens img{
+      max-width: 100%;
+      max-height: 380px;
+      height:auto;
+      object-fit: contain;
+      border-radius: 8px;
+      display:block;
+      margin: 8px auto;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .rodape-log{
+      margin-top: 10px;
+      font-size: 12px;
+      color:#555;
+      border-top: 1px solid #ddd;
+      padding-top: 6px;
+      text-align:center;
+    }
+
+    /* RESPONSIVO */
+    @media (max-width: 768px){
+      .container{ padding: 12px; }
+
+      .header-container{ gap: 24px; }
+      .header-container img{ height: 38px; }
+
+      .grid-imagens{ grid-template-columns: repeat(2, 1fr); }
+      .dropbox{ height: 110px; }
+
+      .linha-dupla-checks{ grid-template-columns: 1fr; }
+      .topo-campos-grid{ grid-template-columns: 1fr; }
+      .rev-topo-campos-grid{ grid-template-columns: 1fr; }
+
+      #grupoClima{ grid-template-columns: 1fr 1fr; }
+
+      .revisao-a4 {
+        width: 100%;
+        min-height: auto;
+        margin: 0;
+        padding: 10px 12px;
+      }
+
+      .desktop-only { display: none; }
+      .mobile-only  { display: block; }
+
+      .tabela-efetivo thead{ display:none; }
+      .tabela-efetivo, .tabela-efetivo tbody, .tabela-efetivo tr, .tabela-efetivo td{
+        display:block;
+        width:100%;
+      }
+      .tabela-efetivo tbody tr{
+        border-bottom: 1px solid #eee;
+        padding: 10px 10px;
+      }
+      .tabela-efetivo tbody td{
+        border:none;
+        padding: 6px 0;
+      }
+      .tabela-efetivo td[data-label]::before{
+        content: attr(data-label);
+        display:block;
+        font-size: 11px;
+        font-weight: 900;
+        color:#666;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+      }
+
+      .tabela-efetivo input[type="number"]{ width: 100%; min-width: 0; }
+
+      .btn-remover-linha{
+        width: 100%;
+        height: 40px;
+        padding: 0 12px;
+        font-size: 13px;
+        border-radius: 10px;
+        white-space: nowrap;
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 420px){
+      #grupoClima{ grid-template-columns: 1fr; }
+      .revClima{ grid-template-columns: 1fr; }
+    }
+
+    /* IMPRESSÃO / PDF (A4) */
+    @media print{
+      body{
+        margin:0 !important;
+        padding:0 !important;
+        background:#fff;
+      }
+
+      .revisao-a4{
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 10mm;
+        box-sizing: border-box;
+        page-break-inside: avoid;
+        font-size: 12px;
+        font-family: Arial, sans-serif;
+      }
+
+      .botoes{ display:none; }
+      .rodape-versao{ display:none !important; }
+    }
+  </style>
+
+  <script>
+    const VERSAO_ROBO = 'MM Dantas · Diário de Obra · v1.0.5';
+
+    function atualizarContador(textarea) {
+      const contador = document.getElementById('contador_' + textarea.id);
+      if (contador) contador.textContent = textarea.value.length + " / " + textarea.maxLength;
+    }
+
+    function preencherTexto(selector, valor) {
+      document.querySelectorAll(selector).forEach(el => { el.textContent = valor || ''; });
+    }
+
+    function preencherHTML(selector, html) {
+      document.querySelectorAll(selector).forEach(el => { el.innerHTML = html || ''; });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const dataRegistroInput = document.getElementById('dataRegistro');
+      if (dataRegistroInput) {
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        const hojeStr = `${ano}-${mes}-${dia}`;
+
+        dataRegistroInput.min = hojeStr;
+        if (!dataRegistroInput.value) dataRegistroInput.value = hojeStr;
+      }
+
+      document.querySelectorAll('.versaoRoboTexto').forEach(el => {
+        el.textContent = VERSAO_ROBO;
+      });
+
+      const respInput = document.getElementById('responsavel');
+      if (respInput) {
+        const params = new URLSearchParams(window.location.search);
+        const respUrl = params.get('responsavel');
+
+        if (respUrl) {
+          const nomeDecodificado = decodeURIComponent(respUrl.replace(/\+/g, ' '));
+          respInput.value = nomeDecodificado;
+        } else {
+          const salvo = localStorage.getItem('responsavel_diario');
+          if (salvo) respInput.value = salvo;
+        }
+      }
+    });
+
+    /* =========================
+       ADD/REMOVE
+       ========================= */
+    function removerLinha(btn){
+      const tr = btn.closest('tr');
+      const tbody = tr.parentElement;
+
+      if (tbody.querySelectorAll('tr').length <= 1) {
+        tr.querySelectorAll('input').forEach(i => i.value = '');
+        return;
+      }
+      tr.remove();
+    }
+
+    function addLinhaPresentes(){
+      const tbody = document.querySelector('#tablePresentes tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td data-label="Função">
+          <input type="text" class="pres-funcao">
+        </td>
+        <td data-label="Quantidade">
+          <input type="number" min="0" max="999" class="pres-qtde">
+        </td>
+        <td data-label="Remover">
+          <button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function addLinhaTerceiros(){
+      const tbody = document.querySelector('#tableTerceiros tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td data-label="Serviço/Empresa">
+          <input type="text" class="terc-servico" placeholder="Digite algo (Ex.: Elétrica)">
+        </td>
+        <td data-label="Quantidade">
+          <input type="number" min="0" max="999" class="terc-qtde">
+        </td>
+        <td data-label="Remover">
+          <button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function addLinhaAusentes(){
+      const tbody = document.querySelector('#tableAusentes tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td data-label="Nome">
+          <input type="text" class="aus-nome" placeholder="Digite algo (Ex.: João Silva)">
+        </td>
+        <td data-label="Função">
+          <input type="text" class="aus-funcao" placeholder="Digite algo (Ex.: Servente)">
+        </td>
+        <td data-label="Motivo">
+          <input type="text" class="aus-motivo" placeholder="Digite algo (Ex.: Atestado)">
+        </td>
+        <td data-label="Remover">
+          <button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function lerPresentesTabela(){
+      const linhas = [];
+      document.querySelectorAll('#tablePresentes tbody tr').forEach(tr => {
+        const funcao = (tr.querySelector('.pres-funcao')?.value || '').trim();
+        const qtde = (tr.querySelector('.pres-qtde')?.value || '').trim();
+        if (funcao && qtde) linhas.push(`• ${funcao}: ${qtde}`);
+      });
+      return linhas;
+    }
+
+    function lerTerceirosTabela(){
+      const linhas = [];
+      document.querySelectorAll('#tableTerceiros tbody tr').forEach(tr => {
+        const serv = (tr.querySelector('.terc-servico')?.value || '').trim();
+        const qtde = (tr.querySelector('.terc-qtde')?.value || '').trim();
+        if (serv && qtde) linhas.push(`• ${serv}: ${qtde}`);
+      });
+      return linhas;
+    }
+
+    function lerAusentesTabela(){
+      const linhas = [];
+      document.querySelectorAll('#tableAusentes tbody tr').forEach(tr => {
+        const nome = (tr.querySelector('.aus-nome')?.value || '').trim();
+        const func = (tr.querySelector('.aus-funcao')?.value || '').trim();
+        const mot  = (tr.querySelector('.aus-motivo')?.value || '').trim();
+
+        if (nome || func || mot) {
+          if (!nome || !func || !mot) throw new Error('AUSENTE_INCOMPLETO');
+          linhas.push(`• ${nome} — ${func} — ${mot}`);
+        }
+      });
+      return linhas;
+    }
+  </script>
+</head>
+
+<body>
+
+<!-- ========== TELA DE REVISÃO ========== -->
+<div id="containerRevisao" class="container-revisao" style="display: none;">
+
+  <!-- DESKTOP -->
+  <div id="telaRevisaoDesktop" class="revisao-a4 desktop-only">
+    <div class="header-container">
+      <img src=" " alt="MM DANTAS">
+      <img src=" " alt="Green Village">
+    </div>
+
+    <div class="rev-topo-bloco">
+      <div class="rev-topo-titulo-box">
+        <p class="titulo-principal">DIÁRIO DE OBRA</p>
+        <div class="titulo-sub">MM DANTAS - OBRA: <span class="destaque revObra"></span></div>
+      </div>
+
+      <div class="rev-topo-campos-grid">
+        <div class="rev-campo">
+          <div class="rev-label">INÍCIO DA OBRA</div>
+          <div class="rev-valor revInicio"></div>
+        </div>
+
+        <div class="rev-campo">
+          <div class="rev-label">PREVISÃO DE TÉRMINO</div>
+          <div class="rev-valor revTermino"></div>
+        </div>
+
+        <div class="rev-campo">
+          <div class="rev-label">DATA DE REGISTRO</div>
+          <div class="rev-valor revData"></div>
+        </div>
+
+        <div class="rev-campo">
+          <div class="rev-label">RESPONSÁVEL</div>
+          <div class="rev-valor revResponsavel"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="quadrado-blocos">
+      <div class="linha-dupla-checks">
+        <div class="bloco-checks">
+          <label class="titulo-bloco">Condições Meteorológicas:</label>
+          <div class="campo-valor revClima"></div>
+        </div>
+
+        <div class="bloco-checks">
+          <label class="titulo-bloco">Condições da Obra:</label>
+          <div class="campo-valor-multi revObraCondicao"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Colaboradores Presentes:</label>
+      <div class="campo-valor-multi revEfetivoTexto"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Terceirizados:</label>
+      <div class="campo-valor-multi revTerceirosTexto"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Colaboradores Ausentes:</label>
+      <div class="campo-valor-multi revAusentes"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Descrição dos Trabalhos em Andamento:</label>
+      <div class="campo-valor-multi revDescricao"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Comentários Gerais:</label>
+      <div class="campo-valor-multi revComentarios"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Imagens:</label>
+      <div class="revImagens"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Vídeo (anexado):</label>
+      <div class="campo-valor revVideoLink"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Áudio (anexado):</label>
+      <div class="campo-valor revAudioLink"></div>
+    </div>
+
+    <div class="rodape-log">
+      <div class="campo-valor-multi revLogRegistro"></div>
+    </div>
+
+    <div class="rodape-versao">
+      <span class="versaoRoboTexto"></span>
+    </div>
+  </div>
+
+  <!-- MOBILE -->
+  <div id="telaRevisaoMobile" class="revisao-a4 mobile-only">
+    <div class="header-container">
+      <img src=" " alt="Logo MM Dantas">
+      <img src=" " alt="Green Village">
+    </div>
+
+    <div class="rev-topo-bloco">
+      <div class="rev-topo-titulo-box">
+        <p class="titulo-principal">DIÁRIO DE OBRA</p>
+        <div class="titulo-sub">MM DANTAS - OBRA: <span class="destaque revObra"></span></div>
+      </div>
+
+      <div class="rev-topo-campos-grid">
+        <div class="rev-campo">
+          <div class="rev-label">INÍCIO DA OBRA</div>
+          <div class="rev-valor revInicio"></div>
+        </div>
+
+        <div class="rev-campo">
+          <div class="rev-label">PREVISÃO DE TÉRMINO</div>
+          <div class="rev-valor revTermino"></div>
+        </div>
+
+        <div class="rev-campo">
+          <div class="rev-label">DATA DE REGISTRO</div>
+          <div class="rev-valor revData"></div>
+        </div>
+
+        <div class="rev-campo">
+          <div class="rev-label">RESPONSÁVEL</div>
+          <div class="rev-valor revResponsavel"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="quadrado-blocos">
+      <div class="linha-dupla-checks">
+        <div class="bloco-checks">
+          <label class="titulo-bloco">Condições Meteorológicas:</label>
+          <div class="campo-valor revClima"></div>
+        </div>
+
+        <div class="bloco-checks">
+          <label class="titulo-bloco">Condições da Obra:</label>
+          <div class="campo-valor-multi revObraCondicao"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Colaboradores Presentes:</label>
+      <div class="campo-valor-multi revEfetivoTexto"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Terceirizados:</label>
+      <div class="campo-valor-multi revTerceirosTexto"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Colaboradores Ausentes:</label>
+      <div class="campo-valor-multi revAusentes"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Descrição dos Trabalhos em Andamento:</label>
+      <div class="campo-valor-multi revDescricao"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Comentários Gerais:</label>
+      <div class="campo-valor-multi revComentarios"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Imagens:</label>
+      <div class="revImagens"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="campo">
+      <label>Vídeo (anexado):</label>
+      <div class="campo-valor revVideoLink"></div>
+
+      <label style="margin-top: 10px;">Áudio (anexado):</label>
+      <div class="campo-valor revAudioLink"></div>
+    </div>
+
+    <div class="rodape-log">
+      <div class="campo-valor-multi revLogRegistro"></div>
+    </div>
+
+    <div class="rodape-versao">
+      <span class="versaoRoboTexto"></span>
+    </div>
+  </div>
+
+  <div class="botoes">
+    <button onclick="voltarFormulario()">Editar</button>
+    <button onclick="downloadTudoSemZip()">DOWNLOAD (PDF + ARQUIVOS)</button>
+  </div>
+</div>
+
+<script>
+  function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+  function baixarBlobComoArquivo(blobOrFile, filename){
+    const url = URL.createObjectURL(blobOrFile);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
+  async function gerarPDFBlob() {
+    const isMobile = window.innerWidth <= 768;
+    const original = document.getElementById(isMobile ? 'telaRevisaoMobile' : 'telaRevisaoDesktop');
+
+    const dataEl = original ? original.querySelector('.revData') : null;
+    if (!original || !dataEl || dataEl.textContent.trim() === '') {
+      alert('Antes de gerar o PDF, clique em "Enviar Registro" para preencher a revisão.');
+      return null;
+    }
+
+    const botoes = document.querySelector('.botoes');
+    const botoesDisplayOld = botoes ? botoes.style.display : null;
+    if (botoes) botoes.style.display = 'none';
+
+    const versoes = document.querySelectorAll('.rodape-versao');
+    const versoesDisplayOld = [];
+    versoes.forEach((el, idx) => {
+      versoesDisplayOld[idx] = el.style.display;
+      el.style.display = 'none';
+    });
+
+    const opcoes = {
+      margin: [0, 0, 0, 0],
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, allowTaint: true, logging: false, scrollY: 0 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { avoid: ['.revImagens img', '.rev-topo-bloco', '.quadrado-blocos'], mode: ['css', 'legacy'] }
+    };
+
+    const restaurar = () => {
+      if (botoes) botoes.style.display = botoesDisplayOld;
+      versoes.forEach((el, idx) => { el.style.display = versoesDisplayOld[idx]; });
+    };
+
+    try{
+      const worker = html2pdf().set(opcoes).from(original).toPdf();
+      const pdf = await worker.get('pdf');
+
+      const total = pdf.internal.getNumberOfPages();
+      if (total > 1) {
+        const ultima = pdf.internal.pages[total];
+        if (!ultima || ultima.length <= 2) pdf.deletePage(total);
+      }
+
+      const blob = pdf.output('blob');
+      restaurar();
+      return blob;
+    } catch (e){
+      console.error(e);
+      restaurar();
+      alert('Falha ao gerar PDF.');
+      return null;
+    }
+  }
+
+  // ======= SALVAR EM PASTA (SEM ZIP) — Chrome/Edge =======
+  async function salvarEmPastaSemZip(pdfBlob, baseName){
+    if (!window.showDirectoryPicker) return false;
+
+    try{
+      const dir = await window.showDirectoryPicker({ mode: 'readwrite' });
+
+      // cria subpasta do registro
+      const folderName = `Diario_de_Obra_${baseName}`;
+      const subdir = await dir.getDirectoryHandle(folderName, { create: true });
+
+      // PDF
+      {
+        const fh = await subdir.getFileHandle(`Diario_de_Obra_${baseName}.pdf`, { create: true });
+        const w = await fh.createWritable();
+        await w.write(pdfBlob);
+        await w.close();
+      }
+
+      // Imagens
+      const imagensDir = await subdir.getDirectoryHandle('imagens', { create: true });
+      for (let i=0; i<imagens.length; i++){
+        const file = imagens[i];
+        if (!file) continue;
+        const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+        const fname = `imagem_${String(i+1).padStart(2,'0')}.${ext}`;
+        const fh = await imagensDir.getFileHandle(fname, { create: true });
+        const w = await fh.createWritable();
+        await w.write(file);
+        await w.close();
+      }
+
+      // Vídeo
+      if (videoAnexado){
+        const vDir = await subdir.getDirectoryHandle('video', { create: true });
+        const fh = await vDir.getFileHandle(videoAnexado.name, { create: true });
+        const w = await fh.createWritable();
+        await w.write(videoAnexado);
+        await w.close();
+      }
+
+      // Áudio
+      if (audioAnexado){
+        const aDir = await subdir.getDirectoryHandle('audio', { create: true });
+        const fh = await aDir.getFileHandle(audioAnexado.name, { create: true });
+        const w = await fh.createWritable();
+        await w.write(audioAnexado);
+        await w.close();
+      }
+
+      alert(`✅ Salvo na pasta escolhida: ${folderName}`);
+      return true;
+    } catch (e){
+      console.warn('Usuário cancelou ou sem permissão:', e);
+      return false;
+    }
+  }
+
+  // ======= DOWNLOAD SEM ZIP (universal = vários arquivos) =======
+  async function downloadTudoSemZip(){
+    const pdfBlob = await gerarPDFBlob();
+    if (!pdfBlob) return;
+
+    const isMobile = window.innerWidth <= 768;
+    const tela = document.getElementById(isMobile ? 'telaRevisaoMobile' : 'telaRevisaoDesktop');
+    const dataRegistro = (tela?.querySelector('.revData')?.textContent || 'registro').trim();
+    const baseName = dataRegistro.replaceAll('-', '_').replaceAll('/', '_');
+
+    // 1) tenta salvar em pasta (Chrome/Edge) — SEM ZIP
+    const salvouEmPasta = await salvarEmPastaSemZip(pdfBlob, baseName);
+    if (salvouEmPasta) return;
+
+    // 2) fallback universal: vários downloads
+    alert('Seu navegador não permite salvar em uma pasta diretamente. Vou baixar os arquivos separados (PDF + mídias).');
+
+    baixarBlobComoArquivo(pdfBlob, `Diario_de_Obra_${baseName}.pdf`);
+    await sleep(350);
+
+    // imagens
+    for (let i=0; i<imagens.length; i++){
+      const file = imagens[i];
+      if (!file) continue;
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      baixarBlobComoArquivo(file, `imagem_${String(i+1).padStart(2,'0')}.${ext}`);
+      await sleep(350);
+    }
+
+    // video
+    if (videoAnexado){
+      baixarBlobComoArquivo(videoAnexado, videoAnexado.name);
+      await sleep(350);
+    }
+
+    // audio
+    if (audioAnexado){
+      baixarBlobComoArquivo(audioAnexado, audioAnexado.name);
+      await sleep(350);
+    }
+  }
+
+  function voltarFormulario() {
+    document.getElementById('containerRevisao').style.display = 'none';
+    document.getElementById('containerFormulario').style.display = 'block';
+  }
+</script>
+
+<!-- ========== FORMULÁRIO PRINCIPAL ========== -->
+<div class="container" id="containerFormulario">
+  <div class="header-container">
+    <img src=" " alt="MM Dantas">
+    <img src="" alt="Green Village">
+  </div>
+
+  <div class="topo-bloco">
+    <div class="topo-titulo-box">
+      <p class="titulo-principal">DIÁRIO DE OBRA</p>
+      <div class="titulo-sub">MM DANTAS - OBRA: <span class="destaque">GREEN VILLAGE</span></div>
+    </div>
+
+    <div class="topo-campos-grid">
+      <div class="campo-topo">
+        <label for="inicio">INÍCIO DA OBRA</label>
+        <input type="text" id="inicio" name="inicio" value="24/02/2025" readonly>
+      </div>
+
+      <div class="campo-topo">
+        <label for="termino">PREVISÃO DE TÉRMINO</label>
+        <input type="text" id="termino" name="termino" value="02/2026" readonly>
+      </div>
+
+      <div class="campo-topo">
+        <label for="dataRegistro" class="required">DATA DE REGISTRO</label>
+        <input type="date" id="dataRegistro" name="dataRegistro" required>
+      </div>
+
+      <div class="campo-topo">
+        <label for="responsavel" class="required">RESPONSÁVEL</label>
+        <input type="text" id="responsavel" name="responsavel" placeholder="Nome completo">
+      </div>
+    </div>
+
+    <input type="hidden" id="obra" value="Green Village" />
+  </div>
+
+  <div class="separador"></div>
+
+  <!-- CONDIÇÕES -->
+  <div class="quadrado-blocos">
+    <div class="linha-dupla-checks">
+      <div class="bloco-checks">
+        <label class="required titulo-bloco">Condições Meteorológicas:</label>
+        <div id="grupoClima">
+          <label><input type="checkbox" name="condicoesMeteorologicas" value="Ensolarado"><img src="https://img.icons8.com/emoji/48/000000/sun-emoji.png" alt="Sol">Ensolarado</label>
+          <label><input type="checkbox" name="condicoesMeteorologicas" value="Nublado"><img src="https://img.icons8.com/emoji/48/000000/cloud-emoji.png" alt="Nuvem">Nublado</label>
+          <label><input type="checkbox" name="condicoesMeteorologicas" value="Chuva"><img src="https://img.icons8.com/emoji/48/000000/cloud-with-rain-emoji.png" alt="Chuva">Chuva</label>
+          <label><input type="checkbox" name="condicoesMeteorologicas" value="Vento"><img src="https://img.icons8.com/ios-filled/50/000000/wind.png" alt="Vento">Vento</label>
+        </div>
+      </div>
+
+      <div class="bloco-checks">
+        <label class="required titulo-bloco">Condições da Obra:</label>
+        <div id="grupoObra">
+          <label><input type="checkbox" name="condicoesObra" value="Praticável">Praticável</label>
+          <label><input type="checkbox" name="condicoesObra" value="Impraticável">Impraticável</label>
+          <label><input type="checkbox" name="condicoesObra" value="Praticável com interferência">Praticável com interferência</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="separador"></div>
+
+  <!-- ====== PRESENTES + TERCEIRIZADOS ====== -->
+  <div class="quadrado-blocos">
+    <div class="linha-dupla-checks">
+
+      <!-- COLABORADORES PRESENTES -->
+      <div class="bloco-efetivo-card" id="cardPresentes">
+        <div class="bloco-efetivo-titulo">
+          <span class="emoji">👷</span>
+          <span>COLABORADORES PRESENTES</span>
+        </div>
+
+        <table class="tabela-efetivo" id="tablePresentes">
+          <thead>
+            <tr>
+              <th style="width:66%;">Função</th>
+              <th style="width:12%;">Quantidade</th>
+              <th style="width:22%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Função">
+                <input type="text" value="Pedreiro" class="pres-funcao" readonly>
+              </td>
+              <td data-label="Quantidade">
+                <input type="number" min="0" max="15" placeholder="" class="pres-qtde">
+              </td>
+              <td data-label="Remover">
+                <button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn-adicionar-mais" onclick="addLinhaPresentes()">
+          ➕ Adicionar mais
+        </button>
+      </div>
+
+      <!-- TERCEIRIZADOS -->
+      <div class="bloco-efetivo-card" id="cardTerceiros">
+        <div class="bloco-efetivo-titulo">
+          <span class="emoji">🏗️</span>
+          <span>TERCEIRIZADOS</span>
+        </div>
+
+        <table class="tabela-efetivo" id="tableTerceiros">
+          <thead>
+            <tr>
+              <th style="width:66%;">Serviço/Empresa</th>
+              <th style="width:12%;">Quantidade</th>
+              <th style="width:22%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Serviço/Empresa">
+                <input type="text" class="terc-servico" placeholder="Ex.: Elétrica">
+              </td>
+              <td data-label="Quantidade">
+                <input type="number" min="0" max="15" placeholder="" class="terc-qtde">
+              </td>
+              <td data-label="Remover">
+                <button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn-adicionar-mais" onclick="addLinhaTerceiros()">
+          ➕ Adicionar mais
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="separador"></div>
+
+  <!-- AUSENTES -->
+  <div class="bloco-efetivo-card" id="cardAusentes">
+    <div class="bloco-efetivo-titulo">
+      <span class="emoji">🚫</span>
+      <span>COLABORADORES AUSENTES</span>
+    </div>
+
+    <table class="tabela-efetivo" id="tableAusentes">
+      <thead>
+        <tr>
+          <th style="width:30%;">Nome</th>
+          <th style="width:25%;">Função</th>
+          <th style="width:25%;">Motivo</th>
+          <th style="width:20%;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Nome">
+            <input type="text" class="aus-nome" placeholder="Ex.: João Silva">
+          </td>
+          <td data-label="Função">
+            <input type="text" class="aus-funcao" placeholder="Ex.: Servente">
+          </td>
+          <td data-label="Motivo">
+            <input type="text" class="aus-motivo" placeholder="Ex.: Atestado">
+          </td>
+          <td data-label="Remover">
+            <button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button" class="btn-adicionar-mais" onclick="addLinhaAusentes()">
+      ➕ Adicionar mais
+    </button>
+  </div>
+
+  <div class="separador"></div>
+
+  <label for="descricao" class="required" style="margin-top:0;">Descrição dos Trabalhos em Andamento:</label>
+  <textarea id="descricao" maxlength="1000" oninput="atualizarContador(this)"></textarea>
+  <div class="char-count" id="contador_descricao">0 / 1000</div>
+
+  <div class="separador"></div>
+
+  <label for="comentarios" style="margin-top:0;">Comentários Gerais:</label>
+  <textarea id="comentarios" maxlength="1000" oninput="atualizarContador(this)"></textarea>
+  <div class="char-count" id="contador_comentarios">0 / 1000</div>
+
+  <div class="separador"></div>
+
+  <label class="required" style="margin-top:0;">Imagem:</label>
+  <div class="grid-imagens" id="gridImagens"></div>
+
+  <div class="separador"></div>
+
+  <!-- ✅ AGORA É ANEXO (NÃO LINK) -->
+  <label style="margin-top:0;">Anexar Vídeo (opcional):</label>
+  <input type="file" id="videoFile" accept="video/*" style="width: 100%; padding: 8px; margin-top: 4px; font-size:12px;">
+
+  <div class="separador"></div>
+
+  <label style="margin-top:0;">Anexar Áudio (opcional):</label>
+  <input type="file" id="audioFile" accept="audio/*" style="width: 100%; padding: 8px; margin-top: 5px; font-size:12px;">
+
+  <div class="button-container">
+    <button type="button" onclick="validarFormulario()">Enviar Registro</button>
+  </div>
+
+  <div class="rodape-versao">
+    <span class="versaoRoboTexto"></span>
+  </div>
+</div>
+
+<script>
+  /* =========================
+     IMAGENS
+     ========================= */
+  const maxBoxes = 6;
+  const grid = document.getElementById("gridImagens");
+  const imagens = new Array(maxBoxes).fill(null);
+
+  // ✅ Arquivos de vídeo e áudio (anexados)
+  let videoAnexado = null;
+  let audioAnexado = null;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const v = document.getElementById("videoFile");
+    const a = document.getElementById("audioFile");
+    if (v) v.addEventListener("change", (e) => videoAnexado = e.target.files[0] || null);
+    if (a) a.addEventListener("change", (e) => audioAnexado = e.target.files[0] || null);
+  });
+
+  function habilitarXPorToque(box){
+    box.addEventListener('touchstart', () => {
+      box.classList.add('show-remove');
+      clearTimeout(box._timer);
+      box._timer = setTimeout(() => {
+        box.classList.remove('show-remove');
+      }, 1500);
+    }, { passive: true });
+  }
+
+  function criarBoxes() {
+    for (let i = 0; i < maxBoxes; i++) {
+      const box = document.createElement("div");
+      box.className = "dropbox";
+      box.dataset.index = i;
+
+      const texto = document.createElement("span");
+      texto.innerText = "Adicionar imagem";
+
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.addEventListener("change", (e) => carregarImagem(i, e.target.files[0]));
+
+      const btnRemover = document.createElement("button");
+      btnRemover.innerText = "✕";
+      btnRemover.className = "remove-btn";
+      btnRemover.onclick = (e) => {
+        e.stopPropagation();
+        removerImagem(i);
+      };
+
+      box.appendChild(texto);
+      box.appendChild(input);
+      box.appendChild(btnRemover);
+
+      box.addEventListener("click", () => input.click());
+
+      box.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        box.style.borderColor = "#666";
+      });
+
+      box.addEventListener("dragleave", () => {
+        box.style.borderColor = "#ccc";
+      });
+
+      box.addEventListener("drop", (e) => {
+        e.preventDefault();
+        box.style.borderColor = "#ccc";
+        const file = e.dataTransfer.files[0];
+        if (file) carregarImagem(i, file);
+      });
+
+      box.addEventListener("paste", (e) => {
+        const items = e.clipboardData.items;
+        for (const item of items) {
+          if (item.type.indexOf("image") !== -1) {
+            const file = item.getAsFile();
+            if (file) carregarImagem(i, file);
+          }
+        }
+      });
+
+      grid.appendChild(box);
+      habilitarXPorToque(box);
+    }
+  }
+
+  function carregarImagem(index, file) {
+    if (!file || !file.type.startsWith("image/")) {
+      alert("Por favor, envie apenas imagens.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      imagens[index] = file;
+      const box = grid.children[index];
+      box.innerHTML = "";
+
+      const img = document.createElement("img");
+      img.src = reader.result;
+
+      const btnRemover = document.createElement("button");
+      btnRemover.innerText = "✕";
+      btnRemover.className = "remove-btn";
+      btnRemover.onclick = (e) => {
+        e.stopPropagation();
+        removerImagem(index);
+      };
+
+      box.appendChild(img);
+      box.appendChild(btnRemover);
+      habilitarXPorToque(box);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removerImagem(index) {
+    imagens[index] = null;
+    const box = grid.children[index];
+    box.innerHTML = "";
+
+    const texto = document.createElement("span");
+    texto.innerText = "Adicionar imagem";
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.addEventListener("change", (e) => carregarImagem(index, e.target.files[0]));
+
+    const btnRemover = document.createElement("button");
+    btnRemover.innerText = "✕";
+    btnRemover.className = "remove-btn";
+    btnRemover.onclick = (e) => {
+      e.stopPropagation();
+      removerImagem(index);
+    };
+
+    box.appendChild(texto);
+    box.appendChild(input);
+    box.appendChild(btnRemover);
+    habilitarXPorToque(box);
+  }
+
+  criarBoxes();
+
+  /* =========================
+     ENVIO / REVISÃO
+     ========================= */
+  function validarFormulario() {
+    const data = document.getElementById('dataRegistro');
+    const descricao = document.getElementById('descricao');
+    const clima = document.querySelectorAll('input[name="condicoesMeteorologicas"]:checked');
+    const obraCond = document.querySelectorAll('input[name="condicoesObra"]:checked');
+    const responsavel = document.getElementById('responsavel');
+
+    const temImagem = imagens.some(f => f !== null);
+
+    if (!responsavel.value.trim()) {
+      alert('Informe o responsável pelo registro.');
+      responsavel.focus();
+      return;
+    }
+
+    if (!data.value || !descricao.value.trim() || clima.length === 0 || obraCond.length === 0 || !temImagem) {
+      alert('Preencha todos os campos obrigatórios (incluindo pelo menos uma imagem).');
+      return;
+    }
+
+    let ausentesTxt = [];
+    try {
+      ausentesTxt = lerAusentesTabela();
+    } catch (e) {
+      if (e.message === 'AUSENTE_INCOMPLETO') {
+        alert('Em "Colaboradores Ausentes", se preencher uma linha, complete Nome, Função e Motivo.');
+        return;
+      }
+    }
+
+    // ====== Preencher topo revisão ======
+    preencherTexto('.revObra', document.getElementById('obra').value);
+    preencherTexto('.revInicio', document.getElementById('inicio').value);
+    preencherTexto('.revTermino', document.getElementById('termino').value);
+    preencherTexto('.revData', data.value);
+    preencherTexto('.revResponsavel', responsavel.value.trim());
+
+    // Clima com ícones
+    const climaSelecionado = Array.from(clima).map(c => {
+      const label = c.closest("label");
+      const img = label.querySelector("img");
+      return `<div class="item-clima"><img src="${img.src}" alt="${img.alt}" style="height:20px;"> ${c.value}</div>`;
+    }).join("");
+    preencherHTML('.revClima', climaSelecionado);
+
+    // Condição obra
+    const obraLista = Array.from(obraCond).map(c => `• ${c.value}`).join("<br>");
+    preencherHTML('.revObraCondicao', obraLista);
+
+    preencherTexto('.revDescricao', descricao.value);
+    preencherTexto('.revComentarios', document.getElementById('comentarios').value);
+
+    // ====== Presentes e Terceirizados ======
+    const presentesTxt = lerPresentesTabela();
+    const terceirosTxt = lerTerceirosTabela();
+
+    preencherHTML('.revEfetivoTexto', presentesTxt.length ? presentesTxt.join('<br>') : '-');
+    preencherHTML('.revTerceirosTexto', terceirosTxt.length ? terceirosTxt.join('<br>') : '-');
+    preencherHTML('.revAusentes', ausentesTxt.length ? ausentesTxt.join('<br>') : '-');
+
+    // Imagens (para visualização e PDF)
+    document.querySelectorAll('.revImagens').forEach(container => {
+      container.innerHTML = "";
+      imagens.forEach((file) => {
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const img = document.createElement("img");
+            img.src = reader.result;
+            container.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    });
+
+    // ✅ Video/Áudio (mostrar nome do arquivo)
+    const videoHTML = videoAnexado
+      ? `<div style="font-size:12px;color:var(--cor-principal);word-break:break-word;">🎥 ${videoAnexado.name}</div>`
+      : "-";
+    const audioHTML = audioAnexado
+      ? `<div style="font-size:12px;color:var(--cor-principal);word-break:break-word;">🎧 ${audioAnexado.name}</div>`
+      : "-";
+
+    preencherHTML('.revVideoLink', videoHTML);
+    preencherHTML('.revAudioLink', audioHTML);
+
+    // Log data/hora
+    const agora = new Date();
+    const dia = String(agora.getDate()).padStart(2, '0');
+    const mes = String(agora.getMonth() + 1).padStart(2, '0');
+    const ano = agora.getFullYear();
+    const horas = String(agora.getHours()).padStart(2, '0');
+    const minutos = String(agora.getMinutes()).padStart(2, '0');
+
+    const dataHoraRegistro = `${dia}/${mes}/${ano} às ${horas}:${minutos}`;
+    const responsavelNome = responsavel.value.trim();
+    const logTexto = `Registrado por ${responsavelNome}, dia ${dataHoraRegistro}.`;
+    preencherHTML('.revLogRegistro', `<strong>${logTexto}</strong>`);
+
+    try { localStorage.setItem('responsavel_diario', responsavelNome); } catch (e) {}
+
+    document.getElementById('containerFormulario').style.display = 'none';
+    document.getElementById('containerRevisao').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
