@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Diário de Obra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --cor-principal:#c40000;
+      --cor-principal-escura:#8f0000;
+      --cinza-linha:#d9d9d9;
+      --cinza-box:#f3f3f3;
+      --texto:#2f2f2f;
+      --linha-secao:#e3e3e3;
+      --cinza-card:#f1f1f1;
+      --vermelho-linha: rgba(196, 0, 0, 0.25);
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      color: var(--texto);
+      font-size: 12px;
+    }
+
+    *, *:before, *:after {
+      box-sizing: inherit;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    /* CABEÇALHO */
+    .header-container{
+      display:flex;
+      align-items:center;
+      justify-content: center;
+      gap: 55px;
+      margin-bottom: 10px;
+      flex-wrap: nowrap;
+    }
+    .header-container img{
+      height: 44px;
+      width:auto;
+      object-fit: contain;
+      display:block;
+    }
+
+    /* TOPO */
+    .topo-bloco{
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 0 1px #e3e3e3;
+      padding: 14px;
+      margin: 0 0 14px 0;
+    }
+
+    .topo-titulo-box{
+      border: 1px solid #e3e3e3;
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: center;
+      margin-bottom: 12px;
+      background: var(--cor-principal);
+    }
+
+    .topo-titulo-box .titulo-principal{
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .3px;
+      margin: 0;
+      color: #fff;
+    }
+
+    .topo-titulo-box .titulo-sub{
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: .2px;
+    }
+
+    .topo-titulo-box .titulo-sub .destaque{
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .topo-campos-grid{
+      display:grid;
+      grid-template-columns: 0.9fr 0.9fr 1.2fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .campo-topo{
+      background: var(--cinza-card);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .campo-topo label{
+      display:block;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--cor-principal);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+
+    .campo-topo label.required::after{
+      content: ' *';
+      color: red;
+      font-weight: bold;
+      margin-left: 4px;
+    }
+
+    .campo-topo input{
+      width:100%;
+      height: 38px;
+      border: 1px solid #d5d5d5;
+      border-radius: 8px;
+      padding: 9px;
+      font-size: 12px;
+      background:#fff;
+      box-sizing: border-box;
+    }
+
+    label{
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+
+    label.required::after {
+      content: ' *';
+      color: red;
+      font-weight: bold;
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="url"],
+    input[type="number"]{
+      border: 1px solid var(--cinza-linha);
+      border-radius: 3px;
+      padding: 8px;
+      font-size: 12px;
+      width: 100%;
+      font-family: Arial, sans-serif;
+      background:#fff;
+      height: 38px;
+      box-sizing: border-box;
+    }
+
+    textarea{
+      border: 1px solid var(--cinza-linha);
+      border-radius: 3px;
+      padding: 8px;
+      font-size: 12px;
+      width: 100%;
+      font-family: Arial, sans-serif;
+      background:#fff;
+      box-sizing: border-box;
+    }
+
+    #descricao,
+    #comentarios {
+      height: 100px;
+      resize: none;
+    }
+
+    .char-count {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+      text-align: right;
+      display: block;
+    }
+
+    #obra, #inicio, #termino{
+      background: var(--cinza-box);
+    }
+
+    .separador{
+      border-top: 1px solid var(--vermelho-linha);
+      margin: 14px 0;
+    }
+
+    /* BLOCO CLIMA / OBRA */
+    .quadrado-blocos{
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    .linha-dupla-checks{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .bloco-checks{
+      border: 1px solid var(--cinza-linha);
+      border-radius: 6px;
+      padding: 12px;
+      background: #fff;
+      min-height: 140px;
+    }
+
+    .bloco-checks .titulo-bloco{
+      display:block;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    #grupoClima{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 12px;
+    }
+
+    #grupoClima label{
+      display:flex;
+      align-items:center;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 12px;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    #grupoClima label img{
+      height: 20px;
+      width:auto;
+    }
+
+    #grupoObra{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #grupoObra label{
+      display:flex;
+      align-items:center;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 12px;
+      margin: 0;
+    }
+
+    /* Presentes / Ausentes / Terceirizados */
+    .bloco-efetivo-card{
+      border: 1px solid #e3e3e3;
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+      overflow: visible;
+    }
+
+    .bloco-efetivo-titulo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      font-size: 14px;
+      margin: 0 0 10px 0;
+    }
+
+    .bloco-efetivo-titulo .emoji{ font-size: 18px; }
+
+    .tabela-efetivo{
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      overflow: hidden;
+      background:#fff;
+      table-layout: auto;
+    }
+
+    .tabela-efetivo thead th{
+      background:#f3f3f3;
+      color:#333;
+      font-size: 12px;
+      font-weight: 900;
+      text-align:left;
+      padding: 8px 10px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+
+    .tabela-efetivo tbody td{
+      padding: 8px 10px;
+      border-bottom: 1px solid #efefef;
+      vertical-align: top;
+    }
+
+    .tabela-efetivo tbody tr:last-child td{ border-bottom:none; }
+
+    .tabela-efetivo th:last-child,
+    .tabela-efetivo td:last-child{
+      width: 130px;
+      min-width: 130px;
+    }
+
+    .tabela-efetivo input[type="text"]{
+      width: 100%;
+      height: 34px;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      padding: 6px 8px;
+      background:#fff;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .tabela-efetivo input[type="number"]{
+      width: 80px;
+      min-width: 80px;
+      max-width: 100%;
+      height: 34px;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      padding: 6px 8px;
+      background:#fff;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .btn-remover-linha{
+      height: 29px;
+      min-width: 96px;
+      width: 100%;
+      padding: 0 8px;
+      border-radius: 8px;
+      border: 1px solid var(--cor-principal);
+      background: var(--cor-principal);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-remover-linha:hover{
+      background: var(--cor-principal-escura);
+      border-color: var(--cor-principal-escura);
+    }
+
+    .btn-adicionar-mais{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(196,0,0,.22);
+      background: rgba(196,0,0,.08);
+      color: var(--cor-principal);
+      font-weight: 900;
+      font-size: 13px;
+      cursor:pointer;
+    }
+    .btn-adicionar-mais:hover{ background: rgba(196,0,0,.12); }
+
+    /* IMAGENS FORM */
+    .grid-imagens{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .dropbox{
+      width: 100%;
+      height: 120px;
+      border: 2px dashed #ccc;
+      border-radius: 6px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 12px;
+      color: #777;
+      background:#f9f9f9;
+      position: relative;
+      overflow:hidden;
+      cursor:pointer;
+    }
+
+    .dropbox img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dropbox input[type="file"] { display:none; }
+
+    .remove-btn{
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      width: auto;
+      height: auto;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1;
+      padding: 5px;
+      margin: 0;
+      cursor: pointer;
+      z-index: 2;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .dropbox:hover .remove-btn{
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .dropbox.show-remove .remove-btn{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* BOTÕES / RODAPÉ */
+    .button-container,
+    .botoes{
+      text-align:center;
+      margin-top: 16px;
+    }
+
+    button{
+      padding: 10px 20px;
+      background: var(--cor-principal);
+      border:none;
+      border-radius: 6px;
+      color:#fff;
+      font-size: 14px;
+      font-weight: 900;
+      cursor:pointer;
+    }
+    button:hover{ background: var(--cor-principal-escura); }
+
+    input:focus, textarea:focus, select:focus, button:focus{
+      outline:none;
+      box-shadow:none;
+    }
+
+    .rodape-versao{
+      margin-top: 10px;
+      text-align:center;
+      font-size: 12px;
+      color:#777;
+    }
+
+    /* REVISÃO */
+    .container-revisao{ display:none; }
+
+    .rev-valor-box{
+      width:100%;
+      min-height: 38px;
+      border: 1px solid #d5d5d5;
+      border-radius: 8px;
+      padding: 9px;
+      font-size: 12px;
+      background:#fff;
+      box-sizing: border-box;
+      display:flex;
+      align-items:center;
+      color:#444;
+      word-break: break-word;
+    }
+
+    .rev-multi{
+      align-items: flex-start;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+
+    .rev-grupoClima{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 12px;
+    }
+    .rev-item-clima{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-weight: 800;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .rev-item-clima img{ height:20px; width:auto; }
+
+    /* IMAGENS NA REVISÃO */
+    .revImagens{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .revImagens img{
+      max-width: 100%;
+      height:auto;
+      object-fit: contain;
+      border-radius: 8px;
+      display:block;
+      margin: 8px auto;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .rodape-log{
+      margin-top: 10px;
+      font-size: 12px;
+      color:#555;
+      border-top: 1px solid #ddd;
+      padding-top: 6px;
+      text-align:center;
+    }
+
+/* =========================
+   BOTÕES (FORA DO PDF)
+   ========================= */
+
+.btn-secundario{
+  padding:10px 14px;
+  font-size:13px;
+  background:#666;
+  border-radius:6px;
+  color:#fff;
+  border:none;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.btn-acao{
+  padding:10px 14px;
+  font-size:13px;
+  border-radius:6px;
+  border:none;
+  font-weight:900;
+  cursor:pointer;
+  background: var(--cor-principal);
+  color:#fff;
+}
+
+.btn-acao:disabled,
+.btn-secundario:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.tag-aux{
+  display:block;
+  margin-top:8px;
+  color:#666;
+  font-size:12px;
+}
+
+.warn{
+  margin-top:8px;
+  color:#a10000;
+  font-size:12px;
+  font-weight:700;
+  display:none;
+}
+
+/* ===== ADITIVO NO CABEÇALHO ===== */
+.campo-aditivo{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.aditivo-opcoes{
+  display:flex;
+  align-items:center;
+  gap:22px;
+  height:38px;
+}
+
+.aditivo-opcoes label{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:900;
+  font-size:12px;
+  color:#c40000;
+  cursor:pointer;
+  white-space: nowrap;
+}
+
+/* NORMALIZA RADIO */
+.aditivo-opcoes input[type="radio"]{
+  width:16px;
+  height:16px;
+  margin:0;
+  accent-color:#c40000;
+  cursor:pointer;
+}
+
+/* =========================
+             MOBILE
+   ========================= */
+@media (max-width: 768px){
+
+  .container{
+    padding:14px;
+  }
+
+  /* CABEÇALHO */
+  .header-container{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .header-container img{
+    height:32px;
+  }
+
+  /* TOPO – UMA COLUNA */
+  .topo-campos-grid{
+    grid-template-columns: 1fr !important;
+  }
+
+  .campo-topo{
+    width:100%;
+  }
+
+  /* ADITIVO */
+  .campo-aditivo{
+    align-items:flex-start;
+  }
+
+  .aditivo-opcoes{
+    justify-content:flex-start;
+  }
+
+  /* CONDIÇÕES */
+  .linha-dupla-checks{
+    grid-template-columns: 1fr !important;
+  }
+
+  #grupoClima{
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #grupoClima label{
+    white-space:normal;
+  }
+
+  /* TABELAS */
+  .tabela-efetivo thead{
+    display:none;
+  }
+
+  .tabela-efetivo tbody tr{
+    display:block;
+    background:#fff;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:12px;
+    border:1px solid #eee;
+  }
+
+  .tabela-efetivo tbody td{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    padding:6px 0;
+    border:none;
+  }
+
+  .tabela-efetivo input{
+    width:100% !important;
+  }
+
+  .btn-remover-linha{
+    width:100%;
+  }
+
+  /* IMAGENS */
+  .grid-imagens{
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* BOTÕES */
+  .container{
+    padding:12px; /* diminui espaço lateral */
+  }
+
+  .botoes{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:15px;
+  }
+
+  .botoes button{
+    width:100%;
+    padding:12px;   
+    font-size:13px;
+  }
+
+}
+  </style>
+</head>
+
+<body>
+<!-- ========== TELA DE REVISÃO ========== -->
+<div id="containerRevisao" class="container container-revisao">
+  <div id="telaRevisao">
+    <div class="header-container">
+      <img src=" " alt="MM DANTAS">
+      <img src=" " alt="Green Village">
+    </div>
+
+    <div class="topo-bloco">
+      <div class="topo-titulo-box">
+        <p class="titulo-principal">DIÁRIO DE OBRA</p>
+        <div class="titulo-sub">MM DANTAS - OBRA: <span class="destaque revObra"></span></div>
+      </div>
+
+      <div class="topo-campos-grid">
+        <div class="campo-topo">
+          <label>INÍCIO DA OBRA</label>
+          <div class="rev-valor-box revInicio"></div>
+        </div>
+
+        <div class="campo-topo">
+          <label>PREVISÃO DE TÉRMINO</label>
+          <div class="rev-valor-box revTermino"></div>
+        </div>
+
+        <div class="campo-topo campo-aditivo">
+        <label class="required">GERA ADITIVO?</label>
+
+        <div class="aditivo-opcoes">
+          <label>
+            <input type="radio" name="geraAditivo" value="Sim">
+            <span>SIM</span>
+          </label>
+
+          <label>
+            <input type="radio" name="geraAditivo" value="Não">
+            <span>NÃO</span>
+          </label>
+        </div>
+      </div>
+
+        <div class="campo-topo">
+          <label>DATA DE REGISTRO</label>
+          <div class="rev-valor-box revData"></div>
+        </div>
+
+        <div class="campo-topo">
+          <label>RESPONSÁVEL</label>
+          <div class="rev-valor-box revResponsavel"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="quadrado-blocos">
+      <div class="linha-dupla-checks">
+        <div class="bloco-checks">
+          <label class="titulo-bloco">Condições Meteorológicas:</label>
+          <div class="rev-grupoClima revClima"></div>
+        </div>
+
+        <div class="bloco-checks">
+          <label class="titulo-bloco">Condições da Obra:</label>
+          <div class="rev-valor-box rev-multi revObraCondicao"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="quadrado-blocos">
+      <div class="linha-dupla-checks">
+        <div class="bloco-efetivo-card">
+          <div class="bloco-efetivo-titulo">
+            <span class="emoji">👷</span>
+            <span>COLABORADORES PRESENTES</span>
+          </div>
+          <div class="rev-valor-box rev-multi revEfetivoTexto"></div>
+        </div>
+
+        <div class="bloco-efetivo-card">
+          <div class="bloco-efetivo-titulo">
+            <span class="emoji">🏗️</span>
+            <span>TERCEIRIZADOS</span>
+          </div>
+          <div class="rev-valor-box rev-multi revTerceirosTexto"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="separador"></div>
+
+    <div class="bloco-efetivo-card">
+      <div class="bloco-efetivo-titulo">
+        <span class="emoji">🚫</span>
+        <span>COLABORADORES AUSENTES</span>
+      </div>
+      <div class="rev-valor-box rev-multi revAusentes"></div>
+    </div>
+
+    <div class="separador"></div>
+
+    <label style="margin-top:0;">Descrição dos Trabalhos em Andamento:</label>
+    <div class="rev-valor-box rev-multi revDescricao"></div>
+
+    <div class="separador"></div>
+
+    <label style="margin-top:0;">Comentários Gerais:</label>
+    <div class="rev-valor-box rev-multi revComentarios"></div>
+
+    <div class="separador"></div>
+
+    <label style="margin-top:0;">Imagem:</label>
+    <div class="revImagens"></div>
+
+    <div class="separador"></div>
+
+    <div class="rodape-log">
+      <div class="revLogRegistro"></div>
+    </div>
+
+    <div class="rodape-versao">
+      <span class="versaoRoboTexto"></span>
+    </div>
+  </div>
+
+  <div class="botoes">
+    <button type="button" onclick="voltarFormulario()">Editar</button>
+    <button type="button" onclick="gerarPDF()">DOWNLOAD</button>
+ 
+  </div>
+</div>
+
+<!-- ========== FORMULÁRIO PRINCIPAL ========== -->
+<div class="container" id="containerFormulario">
+  <div class="header-container">
+    <img src=" " alt="MM Dantas">
+    <img src="" alt="Green Village">
+  </div>
+
+  <div class="topo-bloco">
+    <div class="topo-titulo-box">
+      <p class="titulo-principal">DIÁRIO DE OBRA</p>
+      <div class="titulo-sub">MM DANTAS - OBRA: <span class="destaque">GREEN VILLAGE</span></div>
+    </div>
+
+    <div class="topo-campos-grid">
+      <div class="campo-topo">
+        <label for="inicio">INÍCIO DA OBRA</label>
+        <input type="text" id="inicio" name="inicio" value="24/02/2025" readonly>
+      </div>
+
+      <div class="campo-topo">
+        <label for="termino">PREVISÃO DE TÉRMINO</label>
+        <input type="text" id="termino" name="termino" value="02/2026" readonly>
+      </div>
+
+        <div class="campo-topo campo-aditivo">
+      <label class="required">GERA ADITIVO?</label>
+
+      <div class="aditivo-opcoes">
+        <label>
+          <input type="radio" name="geraAditivo" value="Sim">
+          <span>SIM</span>
+        </label>
+
+        <label>
+          <input type="radio" name="geraAditivo" value="Não">
+          <span>NÃO</span>
+        </label>
+      </div>
+    </div>
+
+      <div class="campo-topo">
+        <label for="dataRegistro" class="required">DATA DE REGISTRO</label>
+        <input type="date" id="dataRegistro" name="dataRegistro" required>
+      </div>
+
+      <div class="campo-topo">
+        <label for="responsavel" class="required">RESPONSÁVEL</label>
+        <input type="text" id="responsavel" name="responsavel" placeholder="Nome completo">
+      </div>
+    </div>
+
+    <input type="hidden" id="obra" value="Green Village" />
+  </div>
+
+  <div class="separador"></div>
+
+  <!-- CONDIÇÕES -->
+  <div class="quadrado-blocos">
+    <div class="linha-dupla-checks">
+      <div class="bloco-checks">
+        <label class="required titulo-bloco">Condições Meteorológicas:</label>
+        <div id="grupoClima">
+          <label><input type="checkbox" name="condicoesMeteorologicas" value="Ensolarado"><img src="https://img.icons8.com/emoji/48/000000/sun-emoji.png" alt="Sol">Ensolarado</label>
+          <label><input type="checkbox" name="condicoesMeteorologicas" value="Nublado"><img src="https://img.icons8.com/emoji/48/000000/cloud-emoji.png" alt="Nuvem">Nublado</label>
+          <label><input type="checkbox" name="condicoesMeteorologicas" value="Chuva"><img src="https://img.icons8.com/emoji/48/000000/cloud-with-rain-emoji.png" alt="Chuva">Chuva</label>
+          <label><input type="checkbox" name="condicoesMeteorologicas" value="Vento"><img src="https://img.icons8.com/ios-filled/50/000000/wind.png" alt="Vento">Vento</label>
+        </div>
+      </div>
+
+      <div class="bloco-checks">
+        <label class="required titulo-bloco">Condições da Obra:</label>
+        <div id="grupoObra">
+          <label><input type="checkbox" name="condicoesObra" value="Praticável">Praticável</label>
+          <label><input type="checkbox" name="condicoesObra" value="Impraticável">Impraticável</label>
+          <label><input type="checkbox" name="condicoesObra" value="Praticável com interferência">Praticável com interferência</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="separador"></div>
+
+  <!-- ====== PRESENTES + TERCEIRIZADOS ====== -->
+  <div class="quadrado-blocos">
+    <div class="linha-dupla-checks">
+      <div class="bloco-efetivo-card" id="cardPresentes">
+        <div class="bloco-efetivo-titulo">
+          <span class="emoji">👷</span>
+          <span>COLABORADORES PRESENTES</span>
+        </div>
+
+        <table class="tabela-efetivo" id="tablePresentes">
+          <thead>
+            <tr>
+              <th style="width:66%;">Função</th>
+              <th style="width:12%;">Quantidade</th>
+              <th style="width:22%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Função">
+                <input type="text" value="Pedreiro" class="pres-funcao" readonly>
+              </td>
+              <td data-label="Quantidade">
+                <input type="number" min="0" max="15" placeholder="" class="pres-qtde">
+              </td>
+              <td data-label="Remover">
+                <button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn-adicionar-mais" onclick="addLinhaPresentes()">
+          ➕ Adicionar mais
+        </button>
+      </div>
+
+      <div class="bloco-efetivo-card" id="cardTerceiros">
+        <div class="bloco-efetivo-titulo">
+          <span class="emoji">🏗️</span>
+          <span>TERCEIRIZADOS</span>
+        </div>
+
+        <table class="tabela-efetivo" id="tableTerceiros">
+          <thead>
+            <tr>
+              <th style="width:66%;">Serviço/Empresa</th>
+              <th style="width:12%;">Quantidade</th>
+              <th style="width:22%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Serviço/Empresa">
+                <input type="text" class="terc-servico" placeholder="Ex.: Elétrica">
+              </td>
+              <td data-label="Quantidade">
+                <input type="number" min="0" max="15" placeholder="" class="terc-qtde">
+              </td>
+              <td data-label="Remover">
+                <button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn-adicionar-mais" onclick="addLinhaTerceiros()">
+          ➕ Adicionar mais
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="separador"></div>
+
+  <!-- AUSENTES -->
+  <div class="bloco-efetivo-card" id="cardAusentes">
+    <div class="bloco-efetivo-titulo">
+      <span class="emoji">🚫</span>
+      <span>COLABORADORES AUSENTES</span>
+    </div>
+
+    <table class="tabela-efetivo" id="tableAusentes">
+      <thead>
+        <tr>
+          <th style="width:30%;">Nome</th>
+          <th style="width:25%;">Função</th>
+          <th style="width:25%;">Motivo</th>
+          <th style="width:20%;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Nome">
+            <input type="text" class="aus-nome" placeholder="Ex.: João Silva">
+          </td>
+          <td data-label="Função">
+            <input type="text" class="aus-funcao" placeholder="Ex.: Servente">
+          </td>
+          <td data-label="Motivo">
+            <input type="text" class="aus-motivo" placeholder="Ex.: Atestado">
+          </td>
+          <td data-label="Remover">
+            <button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button" class="btn-adicionar-mais" onclick="addLinhaAusentes()">
+      ➕ Adicionar mais
+    </button>
+  </div>
+
+  <div class="separador"></div>
+
+  <label for="descricao" class="required" style="margin-top:0;">Descrição dos Trabalhos em Andamento:</label>
+  <textarea id="descricao" maxlength="1000" oninput="atualizarContador(this)"></textarea>
+  <div class="char-count" id="contador_descricao">0 / 1000</div>
+
+  <div class="separador"></div>
+
+  <label for="comentarios" style="margin-top:0;">Comentários Gerais:</label>
+  <textarea id="comentarios" maxlength="1000" oninput="atualizarContador(this)"></textarea>
+  <div class="char-count" id="contador_comentarios">0 / 1000</div>
+
+  <div class="separador"></div>
+
+  <label class="required" style="margin-top:0;">Imagem:</label>
+  <div class="grid-imagens" id="gridImagens"></div>
+
+  <div class="separador"></div>
+
+  <div class="button-container">
+    <button type="button" onclick="validarFormulario()">Enviar Registro</button>
+  </div>
+
+  <div class="rodape-versao">
+    <span class="versaoRoboTexto"></span>
+  </div>
+</div>
+
+<script>
+  const VERSAO_ROBO = 'MM Dantas · Diário de Obra · v1.0.8';
+
+  const maxBoxes = 6;
+const imagens = new Array(maxBoxes).fill(null);
+let grid = null;
+
+/* BASE64 */
+function fileToBase64(file){
+  return new Promise((res, rej)=>{
+    const r = new FileReader();
+    r.onload = ()=>res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+  /* ===== VALIDAÇÕES (IGUAIS ÀS SUAS) ===== */
+
+  function atualizarContador(textarea) {
+    const contador = document.getElementById('contador_' + textarea.id);
+    if (contador) contador.textContent = textarea.value.length + " / " + textarea.maxLength;
+  }
+
+  function preencherTexto(selector, valor) {
+    document.querySelectorAll(selector).forEach(el => { el.textContent = valor || ''; });
+  }
+
+  function preencherHTML(selector, html) {
+    document.querySelectorAll(selector).forEach(el => { el.innerHTML = html || ''; });
+  }
+
+  function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const dataRegistroInput = document.getElementById('dataRegistro');
+    if (dataRegistroInput) {
+      const hoje = new Date();
+      const ano = hoje.getFullYear();
+      const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+      const dia = String(hoje.getDate()).padStart(2, '0');
+      const hojeStr = `${ano}-${mes}-${dia}`;
+      dataRegistroInput.min = hojeStr;
+      if (!dataRegistroInput.value) dataRegistroInput.value = hojeStr;
+    }
+
+    document.querySelectorAll('.versaoRoboTexto').forEach(el => {
+      el.textContent = VERSAO_ROBO;
+    });
+
+    const respInput = document.getElementById('responsavel');
+    if (respInput) {
+      const params = new URLSearchParams(window.location.search);
+      const respUrl = params.get('responsavel');
+
+      if (respUrl) {
+        const nomeDecodificado = decodeURIComponent(respUrl.replace(/\+/g, ' '));
+        respInput.value = nomeDecodificado;
+      } else {
+        const salvo = localStorage.getItem('responsavel_diario');
+        if (salvo) respInput.value = salvo;
+      }
+    }
+  });
+
+  /* =========================
+     ADD/REMOVE tabelas
+     ========================= */
+  function removerLinha(btn){
+    const tr = btn.closest('tr');
+    const tbody = tr.parentElement;
+
+    if (tbody.querySelectorAll('tr').length <= 1) {
+      tr.querySelectorAll('input').forEach(i => i.value = '');
+      return;
+    }
+    tr.remove();
+  }
+
+  function addLinhaPresentes(){
+    const tbody = document.querySelector('#tablePresentes tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-label="Função"><input type="text" class="pres-funcao"></td>
+      <td data-label="Quantidade"><input type="number" min="0" max="999" class="pres-qtde"></td>
+      <td data-label="Remover"><button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button></td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  function addLinhaTerceiros(){
+    const tbody = document.querySelector('#tableTerceiros tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-label="Serviço/Empresa"><input type="text" class="terc-servico" placeholder="Digite algo (Ex.: Elétrica)"></td>
+      <td data-label="Quantidade"><input type="number" min="0" max="999" class="terc-qtde"></td>
+      <td data-label="Remover"><button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button></td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  function addLinhaAusentes(){
+    const tbody = document.querySelector('#tableAusentes tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-label="Nome"><input type="text" class="aus-nome" placeholder="Digite algo (Ex.: João Silva)"></td>
+      <td data-label="Função"><input type="text" class="aus-funcao" placeholder="Digite algo (Ex.: Servente)"></td>
+      <td data-label="Motivo"><input type="text" class="aus-motivo" placeholder="Digite algo (Ex.: Atestado)"></td>
+      <td data-label="Remover"><button type="button" class="btn-remover-linha" onclick="removerLinha(this)">Remover</button></td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  function lerPresentesTabela(){
+    const linhas = [];
+    document.querySelectorAll('#tablePresentes tbody tr').forEach(tr => {
+      const funcao = (tr.querySelector('.pres-funcao')?.value || '').trim();
+      const qtde = (tr.querySelector('.pres-qtde')?.value || '').trim();
+      if (funcao && qtde) linhas.push(`• ${funcao}: ${qtde}`);
+    });
+    return linhas;
+  }
+
+  function lerTerceirosTabela(){
+    const linhas = [];
+    document.querySelectorAll('#tableTerceiros tbody tr').forEach(tr => {
+      const serv = (tr.querySelector('.terc-servico')?.value || '').trim();
+      const qtde = (tr.querySelector('.terc-qtde')?.value || '').trim();
+      if (serv && qtde) linhas.push(`• ${serv}: ${qtde}`);
+    });
+    return linhas;
+  }
+
+  function lerAusentesTabela(){
+    const linhas = [];
+    document.querySelectorAll('#tableAusentes tbody tr').forEach(tr => {
+      const nome = (tr.querySelector('.aus-nome')?.value || '').trim();
+      const func = (tr.querySelector('.aus-funcao')?.value || '').trim();
+      const mot  = (tr.querySelector('.aus-motivo')?.value || '').trim();
+
+      if (nome || func || mot) {
+        if (!nome || !func || !mot) throw new Error('AUSENTE_INCOMPLETO');
+        linhas.push(`• ${nome} — ${func} — ${mot}`);
+      }
+    });
+    return linhas;
+  }
+
+
+  function habilitarXPorToque(box){
+    box.addEventListener('touchstart', () => {
+      box.classList.add('show-remove');
+      clearTimeout(box._timer);
+      box._timer = setTimeout(() => box.classList.remove('show-remove'), 1500);
+    }, { passive: true });
+  }
+
+  async function compressImageToJpeg(file, maxW = 1600, quality = 0.78){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+
+      img.onload = () => {
+        try{
+          const ratio = Math.min(1, maxW / img.naturalWidth);
+          const w = Math.round(img.naturalWidth * ratio);
+          const h = Math.round(img.naturalHeight * ratio);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          canvas.toBlob((blob) => {
+            URL.revokeObjectURL(url);
+            if (!blob) return reject(new Error('Falha ao comprimir imagem'));
+            const safeName = (file.name || 'imagem').replace(/\.(\w+)$/, '') + '.jpg';
+            resolve(new File([blob], safeName, { type: 'image/jpeg' }));
+          }, 'image/jpeg', quality);
+
+        } catch(e){
+          URL.revokeObjectURL(url);
+          reject(e);
+        }
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Falha ao ler imagem'));
+      };
+
+      img.src = url;
+    });
+  }
+
+  function criarBoxes() {
+    for (let i = 0; i < maxBoxes; i++) {
+      const box = document.createElement("div");
+      box.className = "dropbox";
+      box.dataset.index = i;
+      box.tabIndex = 0;
+
+
+      const texto = document.createElement("span");
+      texto.innerText = "Adicionar imagem";
+
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.addEventListener("change", (e) => carregarImagem(i, e.target.files[0]));
+
+      const btnRemover = document.createElement("button");
+      btnRemover.innerText = "✕";
+      btnRemover.className = "remove-btn";
+      btnRemover.onclick = (e) => { e.stopPropagation(); removerImagem(i); };
+
+      box.appendChild(texto);
+      box.appendChild(input);
+      box.appendChild(btnRemover);
+
+      box.addEventListener("click", () => input.click());
+
+      box.addEventListener("dragover", (e) => { e.preventDefault(); box.style.borderColor = "#666"; });
+      box.addEventListener("dragleave", () => { box.style.borderColor = "#ccc"; });
+
+      box.addEventListener("drop", (e) => {
+        e.preventDefault();
+        box.style.borderColor = "#ccc";
+        const file = e.dataTransfer.files[0];
+        if (file) carregarImagem(i, file);
+      });
+
+
+      box.addEventListener("paste", (e) => {
+        const items = e.clipboardData.items;
+        for (const item of items) {
+          if (item.type.indexOf("image") !== -1) {
+            const file = item.getAsFile();
+            if (file) carregarImagem(i, file);
+          }
+        }
+      });
+
+
+      grid.appendChild(box);
+      habilitarXPorToque(box);
+    }
+  }
+
+  async function carregarImagem(index, file) {
+    if (!file || !file.type.startsWith("image/")) { alert("Por favor, envie apenas imagens."); return; }
+
+    let fileOk = file;
+    try { fileOk = await compressImageToJpeg(file, 1600, 0.78); } catch(e){ console.warn('Sem compressão:', e); }
+
+    imagens[index] = fileOk;
+
+    const box = grid.children[index];
+    box.innerHTML = "";
+
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(fileOk);
+
+    const btnRemover = document.createElement("button");
+    btnRemover.innerText = "✕";
+    btnRemover.className = "remove-btn";
+    btnRemover.onclick = (e) => { e.stopPropagation(); removerImagem(index); };
+
+    box.appendChild(img);
+    box.appendChild(btnRemover);
+    habilitarXPorToque(box);
+  }
+
+  function removerImagem(index) {
+    imagens[index] = null;
+    const box = grid.children[index];
+    box.innerHTML = "";
+
+    const texto = document.createElement("span");
+    texto.innerText = "Adicionar imagem";
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.addEventListener("change", (e) => carregarImagem(index, e.target.files[0]));
+
+    const btnRemover = document.createElement("button");
+    btnRemover.innerText = "✕";
+    btnRemover.className = "remove-btn";
+    btnRemover.onclick = (e) => { e.stopPropagation(); removerImagem(index); };
+
+    box.appendChild(texto);
+    box.appendChild(input);
+    box.appendChild(btnRemover);
+    habilitarXPorToque(box);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+  grid = document.getElementById('gridImagens');
+  criarBoxes();
+});
+
+  /* =========================
+     REVISÃO / ENVIO
+     ========================= */
+  async function validarFormulario() {
+    const data = document.getElementById('dataRegistro');
+    const descricao = document.getElementById('descricao');
+    const clima = document.querySelectorAll('input[name="condicoesMeteorologicas"]:checked');
+    const obraCond = document.querySelectorAll('input[name="condicoesObra"]:checked');
+    const responsavel = document.getElementById('responsavel');
+    const aditivo = document.querySelector('input[name="geraAditivo"]:checked');
+
+    const temImagem = imagens.some(f => f !== null);
+
+    if (!responsavel.value.trim()) { alert('Informe o responsável pelo registro.'); responsavel.focus(); return; }
+
+    if (!data.value || !descricao.value.trim() || clima.length === 0 || obraCond.length === 0 || !temImagem) {
+      alert('Preencha todos os campos obrigatórios (incluindo pelo menos uma imagem).');
+      return;
+    }
+
+    if (!aditivo) {
+      alert('Informe se gera aditivo.');
+      return;
+    }
+
+    let ausentesTxt = [];
+    try { ausentesTxt = lerAusentesTabela(); }
+    catch (e) {
+      if (e.message === 'AUSENTE_INCOMPLETO') {
+        alert('Em "Colaboradores Ausentes", se preencher uma linha, complete Nome, Função e Motivo.');
+        return;
+      }
+    }
+
+    preencherTexto('.revObra', document.getElementById('obra').value);
+    preencherTexto('.revInicio', document.getElementById('inicio').value);
+    preencherTexto('.revTermino', document.getElementById('termino').value);
+    preencherTexto('.revData', data.value);
+    preencherTexto('.revResponsavel', responsavel.value.trim());
+
+    const climaSelecionado = Array.from(clima).map(c => {
+      const label = c.closest("label");
+      const img = label.querySelector("img");
+      return `<div class="rev-item-clima"><img src="${img.src}" alt="${img.alt}"> ${c.value}</div>`;
+    }).join("");
+    preencherHTML('.revClima', climaSelecionado || '<div style="font-weight:700;color:#333;">-</div>');
+
+    const obraLista = Array.from(obraCond).map(c => `• ${c.value}`).join("\n");
+    preencherTexto('.revObraCondicao', obraLista || '-');
+
+    preencherTexto('.revDescricao', descricao.value);
+    preencherTexto('.revComentarios', document.getElementById('comentarios').value || '-');
+
+    const presentesTxt = lerPresentesTabela();
+    const terceirosTxt = lerTerceirosTabela();
+
+    preencherTexto('.revEfetivoTexto', presentesTxt.length ? presentesTxt.join('\n') : '-');
+    preencherTexto('.revTerceirosTexto', terceirosTxt.length ? terceirosTxt.join('\n') : '-');
+    preencherTexto('.revAusentes', ausentesTxt.length ? ausentesTxt.join('\n') : '-');
+
+    const revImgContainer = document.querySelector('.revImagens');
+    revImgContainer.innerHTML = '';
+
+    const files = imagens.filter(Boolean);
+
+    for (const file of files) {
+      const base64 = await fileToBase64(file);
+      const img = document.createElement('img');
+      img.src = base64;
+      revImgContainer.appendChild(img);
+    }
+
+    const agora = new Date();
+    const dia = String(agora.getDate()).padStart(2, '0');
+    const mes = String(agora.getMonth() + 1).padStart(2, '0');
+    const ano = agora.getFullYear();
+    const horas = String(agora.getHours()).padStart(2, '0');
+    const minutos = String(agora.getMinutes()).padStart(2, '0');
+
+    const dataHoraRegistro = `${dia}/${mes}/${ano} às ${horas}:${minutos}`;
+    const responsavelNome = responsavel.value.trim();
+    const logTexto = `Registrado por ${responsavelNome}, dia ${dataHoraRegistro}.`;
+    preencherHTML('.revLogRegistro', `<strong>${logTexto}</strong>`);
+
+    try { localStorage.setItem('responsavel_diario', responsavelNome); } catch (e) {}
+
+    document.getElementById('containerFormulario').style.display = 'none';
+    document.getElementById('containerRevisao').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function voltarFormulario() {
+    document.getElementById('containerRevisao').style.display = 'none';
+    document.getElementById('containerFormulario').style.display = 'block';
+  }
+
+  function gerarPDF() {
+  const styleTag = document.querySelector('style');
+
+  const css = styleTag ? styleTag.innerHTML : '';
+
+  fetch('http://localhost:3000/api/pdf', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      html: document.getElementById('telaRevisao').outerHTML,
+      css
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Erro ao gerar PDF');
+    return res.blob();
+  })
+  .then(blob => {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'diario-obra.pdf';
+    link.click();
+  })
+  .catch(err => {
+    alert('Erro ao gerar PDF');
+    console.error(err);
+  });
+}
+
+
+</script>
+
+</body>
+</html>
